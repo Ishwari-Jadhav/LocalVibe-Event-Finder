@@ -25,9 +25,29 @@ app.get("/", (req, res) => {
 console.log("MONGO_URI:", process.env.MONGO_URI);
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected ✅"))
-.catch(err => console.log(err));
+const startServer = async () => {
+  try {
+    console.log("Connecting to MongoDB...");
+
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log("MongoDB Connected ✅");
+
+    const PORT = process.env.PORT || 5000;
+
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+
+  } catch (err) {
+    console.error("MongoDB Error ❌:", err);
+  }
+};
+
+startServer();
 
 // Start Server
 const PORT = process.env.PORT || 5000;
