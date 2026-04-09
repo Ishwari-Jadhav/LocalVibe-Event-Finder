@@ -41,10 +41,15 @@ function App() {
   });
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((pos) => {
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
       setPosition([pos.coords.latitude, pos.coords.longitude]);
-    });
-  }, []);
+    },
+    (err) => {
+      console.log("Location permission denied, using default");
+    }
+  );
+}, []);
 
   const fetchEvents = async () => {
     try {
@@ -91,11 +96,29 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      fetchMyEvents();
-    }
-  }, [user]);
+  const fetchFavorites = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.get(
+      "https://localvibe-backend-2f5t.onrender.com/api/user/favorites",
+      {
+        headers: { Authorization: token }
+      }
+    );
+
+    setFavorites(res.data.map((e) => e._id.toString()));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+useEffect(() => {
+  if (user) {
+    fetchMyEvents();
+    fetchFavorites();
+  }
+}, [user]);
 
   const handleRSVP = async (id, type) => {
     try {
@@ -109,20 +132,29 @@ function App() {
     }
   };
 
-  const toggleFavorite = (eventId) => {
-    if (favorites.includes(eventId)) {
-      setFavorites(favorites.filter((id) => id !== eventId));
-    } else {
-      setFavorites([...favorites, eventId]);
-    }
-  };
+  const toggleFavorite = async (eventId) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.post(
+      `https://localvibe-backend-2f5t.onrender.com/api/user/favorite/${eventId}`,
+      {},
+      {
+        headers: { Authorization: token }
+      }
+    );
+
+    fetchFavorites();
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   useEffect(() => {
     fetchEvents();
   }, [position, filters]);
 
   
-
   return (
     <div className="h-screen flex flex-col">
 
@@ -230,14 +262,14 @@ function App() {
             <div className="bg-white p-3 rounded-xl shadow-md">
               <h2 className="font-bold mb-2">❤️ Favorites</h2>
 
-              {events.filter(e => favorites.includes(e._id)).length === 0 && (
+              {events.filter(e => favorites.includes(e._id.toString())).length === 0 && (
                 <p className="text-sm text-gray-500">
                   No favorites yet ❤️
                 </p>
               )}
 
               {events
-                .filter((e) => favorites.includes(e._id))
+                .filter((e) => favorites.includes(e._id.toString()))
                 .map((event) => (
                   <div key={event._id} className="text-sm mb-1">
                     {event.title}
@@ -350,13 +382,13 @@ function App() {
 
                           <button
                             className={`px-3 py-1 rounded ${
-                              favorites.includes(event._id)
+                              favorites.includes(event._id.toString())
                                 ? "bg-red-500 text-white"
                                 : "bg-gray-300"
                             }`}
                             onClick={() => toggleFavorite(event._id)}
                           >
-                            {favorites.includes(event._id)
+                            {favorites.includes(event._id.toString())
                               ? "❤️ Favorited"
                               : "🤍 Favorite"}
                           </button>

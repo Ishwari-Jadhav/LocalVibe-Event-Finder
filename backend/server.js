@@ -12,9 +12,11 @@ app.use(express.json());
 // Routes
 const eventRoutes = require("./routes/eventRoutes");
 const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/user");
 
 app.use("/api/events", eventRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
 // Test route
 app.get("/", (req, res) => {
