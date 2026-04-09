@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
   res.send("LocalVibe API running 🚀");
 });
 
-// ✅ CLEAN CONNECTION
+// START SERVER + DB
 const startServer = async () => {
   try {
     console.log("Connecting to MongoDB...");
