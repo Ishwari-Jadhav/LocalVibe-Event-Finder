@@ -5,26 +5,23 @@ require("dotenv").config();
 
 const app = express();
 
-
 // Middleware
 app.use(cors());
 app.use(express.json());
 
+// Routes
 const eventRoutes = require("./routes/eventRoutes");
+const authRoutes = require("./routes/auth");
 
 app.use("/api/events", eventRoutes);
-
-const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 
-// Test Route
+// Test route
 app.get("/", (req, res) => {
   res.send("LocalVibe API running 🚀");
 });
 
-console.log("MONGO_URI:", process.env.MONGO_URI);
-
-// MongoDB Connection
+// ✅ CLEAN CONNECTION
 const startServer = async () => {
   try {
     console.log("Connecting to MongoDB...");
@@ -33,15 +30,15 @@ const startServer = async () => {
 
     console.log("MongoDB Connected ✅");
 
+    const PORT = process.env.PORT || 5000;
+
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+
   } catch (err) {
     console.error("MongoDB Error ❌:", err);
   }
 };
 
 startServer();
-
-// Start Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
