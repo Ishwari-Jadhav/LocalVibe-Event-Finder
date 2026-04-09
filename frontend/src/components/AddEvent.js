@@ -56,7 +56,7 @@ function AddEvent({ onEventAdded }) {
   const token = localStorage.getItem("token");
 
     await axios.post(
-    "http://localhost:5000/api/events",
+    "https://localvibe-backend-2f5t.onrender.com/api/events",
     newEvent,
     {
         headers: {

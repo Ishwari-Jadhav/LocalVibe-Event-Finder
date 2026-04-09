@@ -49,7 +49,7 @@ function App() {
   const fetchEvents = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/events/nearby`,
+        `https://localvibe-backend-2f5t.onrender.com/api/events/nearby`,
         {
           params: {
             lng: position[1],
@@ -77,7 +77,7 @@ function App() {
       const token = localStorage.getItem("token");
 
       const res = await axios.get(
-        "http://localhost:5000/api/events/my-events",
+        "https://localvibe-backend-2f5t.onrender.com/api/events/my-events",
         {
           headers: {
             Authorization: token
@@ -100,7 +100,7 @@ function App() {
   const handleRSVP = async (id, type) => {
     try {
       await axios.post(
-        `http://localhost:5000/api/events/${id}/rsvp`,
+        `https://localvibe-backend-2f5t.onrender.com/api/events/${id}/rsvp`,
         { type }
       );
       fetchEvents();

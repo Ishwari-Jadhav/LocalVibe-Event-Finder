@@ -17,7 +17,7 @@ function Auth({ setUser }) {
       if (isLogin) {
         // LOGIN
         const res = await axios.post(
-          "http://localhost:5000/api/auth/login",
+          "https://localvibe-backend-2f5t.onrender.com/api/auth/login",
           {
             email: form.email,
             password: form.password
@@ -33,7 +33,7 @@ function Auth({ setUser }) {
       } else {
         // REGISTER
         await axios.post(
-          "http://localhost:5000/api/auth/register",
+          "https://localvibe-backend-2f5t.onrender.com/api/auth/register",
           form
         );
 
