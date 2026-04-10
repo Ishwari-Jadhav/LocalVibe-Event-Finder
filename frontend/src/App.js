@@ -121,16 +121,24 @@ useEffect(() => {
 }, [user]);
 
   const handleRSVP = async (id, type) => {
-    try {
-      await axios.post(
-        `https://localvibe-backend-2f5t.onrender.com/api/events/${id}/rsvp`,
-        { type }
-      );
-      fetchEvents();
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  try {
+    const token = localStorage.getItem("token");
+
+    await axios.post(
+      `https://localvibe-backend-2f5t.onrender.com/api/events/${id}/rsvp`,
+      { type },
+      {
+        headers: {
+          Authorization: token
+        }
+      }
+    );
+
+    fetchEvents();
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   const toggleFavorite = async (eventId) => {
   try {
