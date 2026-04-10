@@ -1,32 +1,57 @@
 const express = require("express");
 const router = express.Router();
-const eventController = require("../controllers/eventController");
-const Event = require("../models/Event"); 
+const Event = require("../models/Event");
 const auth = require("../middleware/auth");
 
-router.post("/", auth, eventController.createEvent);
-router.get("/", eventController.getEvents);
-
-router.get("/nearby", eventController.getNearbyEvents);
-
-router.get("/my-events", auth, eventController.getMyEvents);
-
-router.post("/:id/rsvp", async (req, res) => {
-  const { type } = req.body;
-
+// RSVP (GOING / INTERESTED)
+router.post("/:id/rsvp", auth, async (req, res) => {
   try {
+    const { type } = req.body;
+    const userId = req.user.id;
+
     const event = await Event.findById(req.params.id);
 
     if (!event) {
-      return res.status(404).json({ message: "Event not found" });
+      return res.status(404).json({ msg: "Event not found" });
     }
 
-    if (type === "going") event.going += 1;
-    if (type === "interested") event.interested += 1;
+    // -------- GOING --------
+    if (type === "going") {
+      if (event.going.includes(userId)) {
+        event.going = event.going.filter(
+          (id) => id.toString() !== userId
+        );
+      } else {
+        event.going.push(userId);
+
+        event.interested = event.interested.filter(
+          (id) => id.toString() !== userId
+        );
+      }
+    }
+
+    // -------- INTERESTED --------
+    if (type === "interested") {
+      if (event.interested.includes(userId)) {
+        event.interested = event.interested.filter(
+          (id) => id.toString() !== userId
+        );
+      } else {
+        event.interested.push(userId);
+
+        event.going = event.going.filter(
+          (id) => id.toString() !== userId
+        );
+      }
+    }
 
     await event.save();
 
-    res.json(event);
+    res.json({
+      going: event.going.length,
+      interested: event.interested.length
+    });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

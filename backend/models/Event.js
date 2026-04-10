@@ -36,14 +36,18 @@ const eventSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  going: {
-    type: Number,
-    default: 0
-  },
-  interested: {
-    type: Number,
-    default: 0
+  going: [
+  {
+    type: require("mongoose").Schema.Types.ObjectId,
+    ref: "User"
   }
+ ],
+  interested: [
+  {
+    type: require("mongoose").Schema.Types.ObjectId,
+    ref: "User"
+  }
+ ],
 }, { timestamps: true });
 
 // IMPORTANT: GEO INDEX

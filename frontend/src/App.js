@@ -362,8 +362,8 @@ useEffect(() => {
                             : "Free"}
                         </p>
 
-                        <p className="text-sm">Going: {event.going || 0}</p>
-                        <p className="text-sm">Interested: {event.interested || 0}</p>
+                        <p className="text-sm">Going: {event.going?.length || 0}</p>
+                        <p className="text-sm">Interested: {event.interested?.length || 0}</p>
 
                         <div className="flex gap-2 mt-2">
                           <button
