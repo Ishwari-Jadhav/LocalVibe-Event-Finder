@@ -352,9 +352,27 @@ useEffect(() => {
 
                         {event.startDate && (
                           <p className="text-sm text-gray-500">
-                            📅 {new Date(event.startDate).toLocaleString()} -{" "}
-                            {event.endDate &&
-                              new Date(event.endDate).toLocaleString()}
+                            📅 {
+                                  new Date(event.startDate).toLocaleString("en-IN", {
+                                    day: "numeric",
+                                    month: "short",
+                                    year: "numeric",
+                                    hour: "numeric",
+                                    minute: "2-digit",
+                                    hour12: true
+                                  })
+                                } -{" "}
+                                {
+                                  event.endDate &&
+                                  new Date(event.endDate).toLocaleString("en-IN", {
+                                    day: "numeric",
+                                    month: "short",
+                                    year: "numeric",
+                                    hour: "numeric",
+                                    minute: "2-digit",
+                                    hour12: true
+                                  })
+                                }
                           </p>
                         )}
 
